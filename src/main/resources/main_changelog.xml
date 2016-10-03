@@ -1,0 +1,75 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="rdanilov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="user">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patronymic" type="varchar(40)"/>
+            <column name="phone" type="varchar(40)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="rdanilov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="address"/>
+            </not>
+        </preConditions>
+        <createTable tableName="address">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="postal_code" type="varchar(40)"/>
+            <column name="town" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="house_number" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flat_number" type="integer"/>
+            <column name="user_id" type="integer">
+                <constraints foreignKeyName="FK_user" referencedTableName="user" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="rdanilov">
+        <sql>
+            Insert into user (name, surname, patronymic, phone) values ('Danilov','Roman',null,'+7999888777');
+            Insert into user (name, surname, patronymic, phone) values ('Anton','Efimov',null,'+7111222333');
+            Insert into user (name, surname, patronymic, phone) values ('Oksana','Kim','Olegovna',null);
+
+            Insert into address (postal_code, town, street, house_number, flat_number, user_id)
+            values ('333333', 'town1', 'street1', '5/1', 19, 1),
+            ('222222', 'town2', 'street2', '6/1', 20, 1),
+            ('111111', 'townAnother', 'streetAnother', '1', 1, 2),
+            ('123456', 'townAnother1', 'streetAnother1', '11', 11, 3),
+            ('654321', 'townAnother2', 'streetAnother2', '22', 22, 3),
+            ('000000', 'townAnother3', 'streetAnother3', '33', 33, 3),
+            ('999999', 'townAnother4', 'streetAnother4', '44/4', 44, 3),
+            (null, 'town', 'street', '1', null, 3);
+
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>
